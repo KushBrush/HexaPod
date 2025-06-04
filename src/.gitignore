@@ -1,0 +1,13 @@
+# ————— PlatformIO generated files —————
+.pio/
+build/
+libdeps/
+
+# ————— Visual Studio Code / IDE settings —————
+.vscode/
+.idea/
+
+# ————— macOS / Linux / Windows temp files —————
+.DS_Store
+Thumbs.db
+*~
