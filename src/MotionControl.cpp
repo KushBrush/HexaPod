@@ -20,7 +20,7 @@ void initMotion() {
 int angleToPWM(float angle_deg) {
     // Map angle to servo pulse range
     float pulse = map(angle_deg, 0, 180, SERVO_MIN, SERVO_MAX);
-    //Serial.print("Pulse "); Serial.println(pulse);            //Prints PWM for theta[3]
+    Serial.print("Pulse "); Serial.println(pulse);            //Prints PWM for theta[3]
     return static_cast<int>(pulse);
 }
 

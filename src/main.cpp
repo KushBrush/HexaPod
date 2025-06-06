@@ -34,6 +34,9 @@ void setup() {
 
 void loop() {
 
-  processSerialCommand();
-}
+  moveToAngles(degA.x, degA.y, degA.z);
+  delay(2000);  // Wait for 2 seconds
+  moveToAngles(degB.x, degB.y, degB.z);
+  delay(2000);  // Wait for 2 seconds 
+} 
 
