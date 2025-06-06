@@ -1,46 +1,51 @@
+# HexaPod Control
 
-This directory is intended for project specific (private) libraries.
-PlatformIO will compile them to static libraries and link into the executable file.
+## Project Overview
+This project contains firmware for controlling a single leg of a hexapod robot using an ESP32 based board.  The code implements forward and inverse kinematics routines so that servo positions can be commanded either by joint angles or by Cartesian coordinates.  Ultimately the goal is to expand this into a full six leg controller capable of executing walking gaits.
 
-The source code of each library should be placed in a separate directory
-("lib/your_library_name/[Code]").
+## Hardware Setup
+- **Board:** NodeMCU‑32S (ESP32)
+- **PWM Driver:** Adafruit 16‑channel PCA9685
+- **Servo Connections:**
+  - Channel 13 – Coxa servo
+  - Channel 14 – Femur servo
+  - Channel 15 – Tibia servo
 
-For example, see the structure of the following example libraries `Foo` and `Bar`:
+Connect the PCA9685 module to the ESP32 via I2C and power the servos with an adequate external supply.  The code assumes a 50 Hz servo update rate.
 
-|--lib
-|  |
-|  |--Bar
-|  |  |--docs
-|  |  |--examples
-|  |  |--src
-|  |     |- Bar.c
-|  |     |- Bar.h
-|  |  |- library.json (optional. for custom build options, etc) https://docs.platformio.org/page/librarymanager/config.html
-|  |
-|  |--Foo
-|  |  |- Foo.c
-|  |  |- Foo.h
-|  |
-|  |- README --> THIS FILE
-|
-|- platformio.ini
-|--src
-   |- main.c
+## Build Instructions
+This project uses [PlatformIO](https://platformio.org/).  Install the PlatformIO CLI or the IDE extension and run:
 
-Example contents of `src/main.c` using Foo and Bar:
-```
-#include <Foo.h>
-#include <Bar.h>
-
-int main (void)
-{
-  ...
-}
-
+```bash
+platformio run
 ```
 
-The PlatformIO Library Dependency Finder will find automatically dependent
-libraries by scanning project source files.
+The build configuration is stored in `platformio.ini`:
 
-More information about PlatformIO Library Dependency Finder
-- https://docs.platformio.org/page/librarymanager/ldf.html
+```ini
+[env:nodemcu-32s]
+platform = espressif32
+board = nodemcu-32s
+framework = arduino
+monitor_speed = 115200
+upload_port = COM3
+monitor_port = COM3
+lib_deps = adafruit/Adafruit PWM Servo Driver Library
+```
+
+Adjust the upload and monitor ports as necessary for your system.  After compiling you can upload the firmware with `platformio run --target upload`.
+
+## Serial Command Usage
+Open a serial monitor at **115200 baud** and send commands terminated by a newline:
+
+- `deg <θ1> <θ2> <θ3>` – Forward kinematics.  Provide joint angles in degrees and the firmware prints the resulting end‑effector coordinates.
+- `pos <x> <y> <z>` – Inverse kinematics.  Provide coordinates in millimeters and the firmware returns the required joint angles.
+
+These commands are useful for verifying the kinematic calculations and for positioning the leg manually.
+
+## Future Work
+- Add support for multiple legs and gait generation
+- Integrate sensor feedback for closed‑loop control
+- Expand the command protocol and add higher level motion primitives
+
+Contributions and experiments are welcome!
