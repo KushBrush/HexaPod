@@ -7,36 +7,22 @@
 
 
 
-struct Vec3 {
-    float x, y, z;
-};
-
-
-Vec3 posA = {225, 0, 0};
-Vec3 posB = {50, 0, 175};
-
-
-Vec3 degA = {90,90,90};
-Vec3 degB = {90,90,180};
-
-
-
-// float theta1_deg, theta2_deg, theta3_deg;
 
 void setup() {
-    Serial.begin(115200);
-    initMotion();
-    pwm.begin();
-    pwm.setPWMFreq(50);  // 50Hz for servos
-    Serial.println("Hexapod control ready.");
+
+  Serial.begin(115200);
+  // Wire.setClock(400000);  // Boost I2C speed to 400kHz (max supported)
+
+  initMotion();
+  Serial.println("Hexapod control ready.");
 
 }
 
 void loop() {
+  
+  supportPhase(posA, posB);
+  delay(1000);  // Wait for a second before the next iteration
+  supportPhase(posB, posA);
+  delay(1000);
 
-  moveToAngles(degA.x, degA.y, degA.z);
-  delay(2000);  // Wait for 2 seconds
-  moveToAngles(degB.x, degB.y, degB.z);
-  delay(2000);  // Wait for 2 seconds 
-} 
-
+}
