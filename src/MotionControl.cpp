@@ -19,6 +19,8 @@ const int servo3 = 15;  // Tibia
 const int steps = 25;         // Number of interpolation steps
 const int delayPerStep = 10;  // Fixed time between points
 
+extern const int liftHeight = 50; // Lift height for the leg
+
 // Vec3 posA = {125, -125, -50};
 // Vec3 posB = {125,  125, -50};
 
@@ -42,7 +44,6 @@ int angleToPWM(float angle_deg) {
 }
 
 void moveToAngles(float theta1_deg, float theta2_deg, float theta3_deg) {
-
 
     pwm.setPWM(servo1, 0, angleToPWM(theta1_deg));
     delay(3);  
@@ -82,4 +83,31 @@ void supportPhase(Vec3 posA, Vec3 posB){
 
     delay(delayPerStep);
 }
+}
+
+void bezierPhase(Vec3 posA, Vec3 posB) {
+    Vec3 P0 = posA;
+    Vec3 P2 = posB;
+
+    // Midpoint
+    Vec3 P1;
+    P1.x = (P0.x + P2.x) / 2.0;
+    P1.y = (P0.y + P2.y) / 2.0;
+    P1.z = (P0.z + P2.z) / 2.0 + liftHeight;
+
+    for (int i = 0; i <= steps; ++i) {
+        float t = (float)i / steps;
+
+        // Quadratic Bézier interpolation
+        Vec3 interp;
+        interp.x = (1 - t) * (1 - t) * P0.x + 2 * (1 - t) * t * P1.x + t * t * P2.x;
+        interp.y = (1 - t) * (1 - t) * P0.y + 2 * (1 - t) * t * P1.y + t * t * P2.y;
+        interp.z = (1 - t) * (1 - t) * P0.z + 2 * (1 - t) * t * P1.z + t * t * P2.z;
+
+        float theta1, theta2, theta3;
+        IK(interp.x, interp.y, interp.z, theta1, theta2, theta3);
+        moveToAngles(theta1, theta2, theta3);
+
+        delay(delayPerStep);
+    }
 }

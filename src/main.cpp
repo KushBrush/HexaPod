@@ -19,10 +19,9 @@ void setup() {
 }
 
 void loop() {
-  
-  supportPhase(posA, posB);
-  delay(1000);  // Wait for a second before the next iteration
-  supportPhase(posB, posA);
-  delay(1000);
 
+  bezierPhase(posA, posB);
+  delay(1000);
+  supportPhase(posA, posB);  // swing back with lift
+  delay(1000);
 }

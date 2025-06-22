@@ -8,6 +8,7 @@ const int tibiaOffsetDeg = 40;   // Offset relative to CW femur in Z (top down)
 const float PI = 3.141592;       // Pi constant
 
 
+
 // Adjust based on your servos:
 const int SERVO_MIN = 120;   // ~500us
 const int SERVO_MAX = 500;   // ~2500us
